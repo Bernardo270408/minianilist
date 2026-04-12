@@ -27,9 +27,10 @@ const getContentDetails = async (id, mediaType) => {
     rating: json.vote_average || 0,
     genres: json.genres?.map(g => g.name).slice(0, 2).join(', ') || 'N/A',
     classification: getClassification(json, type),
-    mediaType: type
+    mediaType: type,
+    release_date: json.release_date || json.first_air_date || 'N/A',
   };
-};
+  };
 
 export const searchAnimations = async (query) => {
   const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${query}&language=pt-BR`);

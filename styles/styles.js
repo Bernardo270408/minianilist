@@ -1,4 +1,3 @@
-// styles.js
 import { StyleSheet } from 'react-native';
 import { COLORS } from './theme';
 
@@ -10,6 +9,7 @@ export const styles = StyleSheet.create({
   },
   searchContainer: { 
     flexDirection: 'row', 
+    alignItems: 'center', // Movido do estilo inline
     paddingHorizontal: 15, 
     marginBottom: 10 
   },
@@ -20,6 +20,9 @@ export const styles = StyleSheet.create({
     borderRadius: 8, 
     paddingHorizontal: 15, 
     height: 45 
+  },
+  searchInputWithMargin: {
+    marginLeft: 10 // Adicionado para substituir o inline dinâmico
   },
   searchButton: { 
     backgroundColor: COLORS.mauve, 
@@ -42,7 +45,6 @@ export const styles = StyleSheet.create({
     marginBottom: 20, 
     overflow: 'hidden', 
     height: 180,
-    // Sombra leve para destacar no fundo 'base'
     borderWidth: 1,
     borderColor: COLORS.surface0
   },
@@ -115,13 +117,13 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.red 
   },
   buttonText: { 
-    color: COLORS.crust, // Texto escuro nos botões coloridos para melhor contraste
+    color: COLORS.crust, 
     fontSize: 11, 
     fontWeight: 'bold' 
   },
   backButton: {
     padding: 14,
-    backgroundColor: COLORS.surface0, // Ou a cor que combinar com seu app
+    backgroundColor: COLORS.surface0, 
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -130,5 +132,44 @@ export const styles = StyleSheet.create({
     color: COLORS.text,
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  loadingIndicator: {
+    marginTop: 50
+  },
+  emptyContainer: {
+    alignItems: 'center', 
+    marginTop: 50
+  },
+  emptyText: {
+    color: COLORS.subtext,
+    fontSize: 16
+  },
+  // Adicione isso no seu styles.js
+  filtersWrapper: {
+    height: 50,
+    marginBottom: 10,
+  },
+  filtersContainer: {
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    gap: 8
+  },
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: COLORS.surface0,
+    marginRight: 8, 
+  },
+  filterButtonActive: {
+    backgroundColor: COLORS.mauve, 
+  },
+  filterText: {
+    fontSize: 14,
+    color: COLORS.text,
+    fontWeight: '600',
+  },
+  filterTextActive: {
+    color: COLORS.background,
   },
 });
