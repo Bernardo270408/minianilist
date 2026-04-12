@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: COLORS.base, 
-    paddingTop: 50 
+    paddingTop: 30 
   },
   searchContainer: { 
     flexDirection: 'row', 

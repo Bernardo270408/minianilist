@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, ActivityIndicator, Keyboard } from 'react-native';
-import { styles } from './styles/styles';
+import { styles } from '../styles/styles';
 import { searchAnimations } from '../services/tmdb';
 import { useSavedList } from '../hooks/useSavedList';
 import { MediaCard } from '../components/MediaCard';
@@ -41,7 +41,7 @@ export default function HomeScreen() {
   const dataToDisplay = isViewingSearch ? searchResults : savedList;
   const emptyMessage = isViewingSearch 
     ? "Nenhum resultado encontrado." 
-    : "Sua lista está vazia. Adicione itens primeiro!";
+    : "Sua lista está vazia. Adicione alguns animes!";
 
   return (
     <View style={styles.container}>
