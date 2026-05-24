@@ -172,4 +172,41 @@ export const styles = StyleSheet.create({
   filterTextActive: {
     color: COLORS.background,
   },
+  // Estilos para Header Component
+  header: {
+    backgroundColor: COLORS.mauve,
+    paddingVertical: 16,
+    paddingHorizontal: 15,
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.surface0,
+  },
+  headerTitle: {
+    color: COLORS.text,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  // Estilos para MediaCount Component
+  countContainer: {
+    backgroundColor: COLORS.surface0,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    marginHorizontal: 15,
+    marginBottom: 12,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.blue,
+  },
+  countText: {
+    color: COLORS.text,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  // Estilos para ClearButton Component
+  btnClear: {
+    backgroundColor: COLORS.red,
+    marginHorizontal: 15,
+    marginBottom: 20,
+    paddingVertical: 12,
+  },
 });

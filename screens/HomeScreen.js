@@ -5,6 +5,8 @@ import { COLORS } from '../styles/theme'
 import { searchAnimations } from '../services/tmdb';
 import { useSavedList } from '../hooks/useSavedList';
 import { MediaCard } from '../components/MediaCard';
+import { MediaCount } from '../components/MediaCount';
+import { ClearButton } from '../components/ClearButton';
 
 export default function HomeScreen() {
   const { savedList, handleAdd, handleRemove, isItemSaved } = useSavedList();
@@ -40,6 +42,18 @@ export default function HomeScreen() {
     setSearchQuery('');
     setSortOption(''); 
     Keyboard.dismiss();
+  };
+
+  const clearAllHandler = async () => {
+    // Remove all items from the saved list
+    const newList = [];
+    await handleRemove(null); // This will be overridden by the actual clear logic below
+    // Actually, we need to clear savedList - let's use AsyncStorage directly
+    // But we should use the hook's capability. Let's call handleRemove for each item
+    // Better approach: we'll iterate and remove
+    for (const item of savedList) {
+      await handleRemove(item.id);
+    }
   };
 
   const baseData = isViewingSearch ? searchResults : savedList;
@@ -120,6 +134,9 @@ export default function HomeScreen() {
         </ScrollView>
       </View>
 
+      {/* Contador de animes salvos (apenas quando não está em busca) */}
+      {!isViewingSearch && <MediaCount quantidade={savedList.length} />}
+
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.red} style={styles.loadingIndicator} />
       ) : (
@@ -132,6 +149,11 @@ export default function HomeScreen() {
               <Text style={styles.emptyText}>{emptyMessage}</Text>
             </View>
           )}
+          ListFooterComponent={
+            !isViewingSearch && savedList.length > 0 ? (
+              <ClearButton onClear={clearAllHandler} />
+            ) : null
+          }
           renderItem={({ item }) => (
             <MediaCard 
               item={item} 
