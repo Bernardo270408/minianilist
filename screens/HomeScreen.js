@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Keyboard, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Keyboard, ScrollView, Modal } from 'react-native';
 import { styles } from '../styles/styles';
 import { COLORS } from '../styles/theme'
 import { searchAnimations } from '../services/tmdb';
@@ -15,6 +15,9 @@ export default function HomeScreen() {
   const [searchResetTrigger, setSearchResetTrigger] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isViewingSearch, setIsViewingSearch] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmTarget, setConfirmTarget] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState('');
   
   const [sortOption, setSortOption] = useState('');
 
@@ -47,6 +50,38 @@ export default function HomeScreen() {
 
   const clearAllHandler = async () => {
     await handleClear();
+  };
+
+  const openClearModal = () => {
+    setConfirmTarget({ type: 'clear' });
+    setConfirmMessage('Tem certeza de que deseja limpar todos os itens salvos?');
+    setConfirmVisible(true);
+  };
+
+  const openRemoveModal = (item) => {
+    setConfirmTarget({ type: 'remove', id: item.id });
+    setConfirmMessage(`Remover "${item.title}" da lista salva?`);
+    setConfirmVisible(true);
+  };
+
+  const confirmAction = async () => {
+    if (!confirmTarget) return;
+
+    if (confirmTarget.type === 'clear') {
+      await clearAllHandler();
+    }
+
+    if (confirmTarget.type === 'remove') {
+      await handleRemove(confirmTarget.id);
+    }
+
+    setConfirmVisible(false);
+    setConfirmTarget(null);
+  };
+
+  const cancelAction = () => {
+    setConfirmVisible(false);
+    setConfirmTarget(null);
   };
 
   const baseData = isViewingSearch ? searchResults : savedList;
@@ -126,7 +161,8 @@ export default function HomeScreen() {
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.red} style={styles.loadingIndicator} />
       ) : (
-        <FlatList
+        <>
+          <FlatList
           data={dataToDisplay}
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={styles.list}
@@ -137,7 +173,7 @@ export default function HomeScreen() {
           )}
           ListFooterComponent={
             !isViewingSearch && savedList.length > 0 ? (
-              <ClearButton onClear={clearAllHandler} />
+              <ClearButton onClear={openClearModal} />
             ) : null
           }
           renderItem={({ item }) => (
@@ -145,10 +181,27 @@ export default function HomeScreen() {
               item={item}
               isSaved={isItemSaved(item.id)}
               onAdd={handleAdd}
-              onRemove={handleRemove}
+              onRemoveRequest={openRemoveModal}
             />
           )}
         />
+          <Modal visible={confirmVisible} transparent animationType="fade">
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Confirmação</Text>
+                <Text style={styles.modalMessage}>{confirmMessage}</Text>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity style={[styles.button, styles.btnRemove, styles.modalButton]} onPress={cancelAction}>
+                    <Text style={styles.buttonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.button, styles.btnAdd, styles.modalButton]} onPress={confirmAction}>
+                    <Text style={styles.buttonText}>Confirmar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </>
       )}
     </View>
   );
