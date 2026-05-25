@@ -1,36 +1,36 @@
 import { useState, useMemo } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, ActivityIndicator, Keyboard, ScrollView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Keyboard, ScrollView } from 'react-native';
 import { styles } from '../styles/styles';
 import { COLORS } from '../styles/theme'
 import { searchAnimations } from '../services/tmdb';
 import { useSavedList } from '../hooks/useSavedList';
-import { MediaCard } from '../components/MediaCard';
+import ListItem from '../components/ListItem';
 import { MediaCount } from '../components/MediaCount';
 import { ClearButton } from '../components/ClearButton';
+import ItemInput from '../components/ItemInput';
 
 export default function HomeScreen() {
-  const { savedList, handleAdd, handleRemove, isItemSaved } = useSavedList();
-  
-  const [searchResults, setSearchResults] = useState([]); 
-  const [searchQuery, setSearchQuery] = useState('');
+  const { savedList, handleAdd, handleRemove, handleClear, isItemSaved } = useSavedList();
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchResetTrigger, setSearchResetTrigger] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isViewingSearch, setIsViewingSearch] = useState(false);
   
   const [sortOption, setSortOption] = useState('');
 
-  const performSearch = async () => {
-    const query = searchQuery.trim(); 
-    if (!query) return handleBack();
+  const performSearch = async (query) => {
+    const q = (query || '').trim();
+    if (!q) return handleBack();
 
-    setIsViewingSearch(true); 
+    setIsViewingSearch(true);
     setLoading(true);
-    Keyboard.dismiss(); 
-    
+    Keyboard.dismiss();
+
     try {
-      const results = await searchAnimations(query);
+      const results = await searchAnimations(q);
       setSearchResults(results);
     } catch (error) {
-      console.error("Erro na busca:", error);
+      console.error('Erro na busca:', error);
     } finally {
       setLoading(false);
     }
@@ -39,21 +39,14 @@ export default function HomeScreen() {
   const handleBack = () => {
     setIsViewingSearch(false);
     setSearchResults([]);
-    setSearchQuery('');
-    setSortOption(''); 
+    setSortOption('');
+    // trigger ItemInput to reset
+    setSearchResetTrigger(prev => !prev);
     Keyboard.dismiss();
   };
 
   const clearAllHandler = async () => {
-    // Remove all items from the saved list
-    const newList = [];
-    await handleRemove(null); // This will be overridden by the actual clear logic below
-    // Actually, we need to clear savedList - let's use AsyncStorage directly
-    // But we should use the hook's capability. Let's call handleRemove for each item
-    // Better approach: we'll iterate and remove
-    for (const item of savedList) {
-      await handleRemove(item.id);
-    }
+    await handleClear();
   };
 
   const baseData = isViewingSearch ? searchResults : savedList;
@@ -101,14 +94,7 @@ export default function HomeScreen() {
             <Text style={styles.backButtonText}>Voltar</Text>
           </TouchableOpacity>
         )}
-        <TextInput
-          style={[styles.searchInput, isViewingSearch && styles.searchInputWithMargin]}
-          placeholder="Busque por Animes"
-          placeholderTextColor={COLORS.subtext}
-          value={searchQuery}
-          onChangeText={setSearchQuery} 
-          onSubmitEditing={performSearch} 
-        />
+        <ItemInput onSubmit={performSearch} resetTrigger={searchResetTrigger} />
       </View>
 
       {/* Menu horizontal de Filtros */}
@@ -155,8 +141,8 @@ export default function HomeScreen() {
             ) : null
           }
           renderItem={({ item }) => (
-            <MediaCard 
-              item={item} 
+            <ListItem 
+              item={item}
               isSaved={isItemSaved(item.id)}
               onAdd={handleAdd}
               onRemove={handleRemove}

@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
   },
   searchContainer: { 
     flexDirection: 'row', 
-    alignItems: 'center', // Movido do estilo inline
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 15, 
     marginBottom: 10 
   },
@@ -30,7 +31,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8, 
     width: 45, 
     justifyContent: 'center', 
-    alignItems: 'center' 
+    alignItems: 'center'
   },
   searchButtonText: { 
     fontSize: 18 
@@ -40,7 +41,6 @@ export const styles = StyleSheet.create({
   },
   card: { 
     backgroundColor: COLORS.mantle, 
-    borderRadius: 12, 
     flexDirection: 'row', 
     marginBottom: 20, 
     overflow: 'hidden', 
@@ -127,6 +127,8 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
+    marginBottom: 10
   },
   backButtonText: {
     color: COLORS.text,
@@ -208,5 +210,44 @@ export const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginBottom: 20,
     paddingVertical: 12,
+  },
+  // ItemInput
+  searchInnerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  searchButton: {
+    backgroundColor: COLORS.mauve,
+    marginLeft: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchButtonText: {
+    color: COLORS.crust,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  listItem: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  listItemPressed: {
+    opacity: 0.85,
+  },
+  listItemTop: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: COLORS.surface0,
+  },
+  listItemTitle: {
+    color: COLORS.text,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

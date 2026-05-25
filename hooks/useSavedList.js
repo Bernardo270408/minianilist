@@ -41,8 +41,18 @@ export function useSavedList() {
     }
   };
 
+  const handleClear = async () => {
+    try {
+      const newList = [];
+      setSavedList(newList);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
+    } catch (e) {
+      console.error('Erro ao limpar lista:', e);
+    }
+  };
+
   // Retorna um helper para verificar se um item já está salvo
   const isItemSaved = (id) => savedList.some(item => item.id === id);
 
-  return { savedList, handleAdd, handleRemove, isItemSaved };
+  return { savedList, handleAdd, handleRemove, handleClear, isItemSaved };
 }
